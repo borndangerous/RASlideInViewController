@@ -9,5 +9,5 @@ Pod::Spec.new do |s|
   s.source       = { :git => "https://github.com/ra1028/RASlideInViewController.git", :tag => "0.0.4" }
   s.requires_arc = true
   s.source_files = 'RASlideInViewController/*.{h,m}'
-  s.dependency   = 'JREnum'
+  s.dependency   = 'JREnum', :git => 'https://github.com/rentzsch/JREnum.git'
 end
