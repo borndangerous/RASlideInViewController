@@ -8,6 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface RAViewController : UIViewController
+@interface CanvasViewController : UIViewController
 
 @end

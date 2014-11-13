@@ -7,14 +7,26 @@
 //
 
 #import "RAAppDelegate.h"
+//#import "RASlideInViewController.h"
+#import "CanvasViewController.h"
 
 @implementation RAAppDelegate
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     [application setStatusBarStyle:UIStatusBarStyleLightContent];
+    self.window.rootViewController = [[CanvasViewController alloc] init];
+    [self.window makeKeyAndVisible];
     
     return YES;
+}
+
+-(UIWindow*)window {
+    if(!_window){
+        _window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
+        _window.windowLevel = UIWindowLevelStatusBar;
+    }
+    return _window;
 }
 							
 - (void)applicationWillResignActive:(UIApplication *)application
