@@ -7,7 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import <JREnum.h>
+#import "JREnum.h"
 
 JREnumDeclare(RASlideViewSlideInDirection,
               RASlideInDirectionBottomToTop,

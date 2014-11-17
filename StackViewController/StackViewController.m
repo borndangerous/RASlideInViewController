@@ -6,15 +6,17 @@
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
 //
 
-#import "RASlideInViewController.h"
+#import "StackViewController.h"
 
-@interface RASlideInViewController ()
+JREnumDefine(RASlideViewSlideInDirection);
+
+@interface StackViewController ()
 
 @property (nonatomic, assign) BOOL appered;
 
 @end
 
-@implementation RASlideInViewController
+@implementation StackViewController
 {
     UIView *_backDropView;
 }
@@ -23,17 +25,15 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        //do any setup
-        [self initialSetup];
+        NSLog(@"initWithCoder");
     }
     return self;
 }
 
-- (id)init
-{
+- (id)init {
     self = [super init];
     if (self) {
-        //do any setup
+        NSLog(@"init");
         [self initialSetup];
     }
     return self;
@@ -42,13 +42,13 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    NSLog(@"viewDidLoad");
     
-    //configre
+    //configure
     [self configure];
 }
 
-- (void)viewDidAppear:(BOOL)animated
-{
+- (void)viewDidAppear:(BOOL)animated {
     //back drop view
     _backDropView = [self backDropView];
     if (!_appered)
@@ -71,7 +71,7 @@
                 transform = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio, _backdropViewScaleReductionRatio);
             }else {
                 CGAffineTransform scale = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio, _backdropViewScaleReductionRatio);
-                CGAffineTransform shift = [self shiftBackDropViewWithPercentage:0];
+                CGAffineTransform shift = [self calculateBackdropShiftFromProgress:0];
                 transform = CGAffineTransformConcat(scale, shift);
             }
             _backDropView.alpha = _backDropViewAlpha;
@@ -84,8 +84,8 @@
     }
 }
 
-- (void)initialSetup
-{
+- (void)initialSetup {
+    NSLog(@"initialSetup");
     //initial property value
     _slideInDirection = RASlideInDirectionBottomToTop;
     _shiftBackDropView = NO;
@@ -93,15 +93,21 @@
     _backdropViewScaleReductionRatio = .9f;
     _shiftBackDropViewValue = 100.f;
     _backDropViewAlpha = 0;
+    
+    self.view.backgroundColor = [self randomColor];
 }
 
-- (void)configure
-{
+- (void)configure {
+    NSLog(@"configure");
     //initial alpha
     self.view.alpha = 0;
     
     //modal style
-    self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    //self.modalPresentationStyle = UIModalPresentationCurrentContext;
+    
+    self.providesPresentationContextTransitionStyle = YES;
+    self.definesPresentationContext = YES;
+    self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
     //shadow
     self.view.layer.shadowColor = [UIColor blackColor].CGColor;
@@ -110,6 +116,8 @@
     self.view.layer.shadowRadius = 2.f;
     self.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.view.bounds].CGPath;
     self.view.layer.shouldRasterize = YES;
+    //self.view.layer.cornerRadius = 6;
+    //self.view.layer.masksToBounds = YES;
     self.view.layer.rasterizationScale = [UIScreen mainScreen].scale;
     
     //pan Gesture
@@ -117,8 +125,7 @@
     [self.view addGestureRecognizer:pan];
 }
 
-- (CGRect)appearedAnimationStandbyPosition
-{
+- (CGRect)appearedAnimationStandbyPosition {
     CGSize viewSize = self.view.bounds.size;
     switch (_slideInDirection) {
         case RASlideInDirectionBottomToTop:
@@ -150,17 +157,20 @@
     }
 }
 
-- (UIView *)backDropView
-{
+- (UIView *)backDropView {
     UIView *superView;
     if (self.presentingViewController){
         superView = self.presentingViewController.view;
         return superView;
-    }else {
+    } else {
         NSArray *windows = [UIApplication sharedApplication].windows;
         NSInteger index = [windows indexOfObject:self.view.window];
-        superView = ((UIWindow *)[windows objectAtIndex:index - 1]).rootViewController.view;
-        return superView;
+        if([windows count] > 1){
+            superView = ((UIWindow *)[windows objectAtIndex:index - 1]).rootViewController.view;
+            return superView;
+        } else {
+            return nil;
+        }
     }
 }
 
@@ -172,15 +182,15 @@
     switch (sender.state) {
         case UIGestureRecognizerStateChanged:
             //transition
-            [self viewTransition:translation];
-            [self transformSuperViewControllerViewWithPercentage:[self calcPercentage]];
+            [self transformFrontView:translation];
+            [self transformBackdropViewWithProgress:[self calcprogress]];
             break;
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateEnded:
             if ([self didEndDragingHandllerWithVelocity:velocity]) {
-                [self forwardTransitedView];
+                [self dismissFrontView];
             }else {
-                [self reverseTransitedView];
+                [self refocusFrontView];
             }
             break;
         default:
@@ -219,7 +229,7 @@
     }
 }
 
-- (CGFloat)calcPercentage
+- (CGFloat)calcprogress
 {
     switch (_slideInDirection) {
         case RASlideInDirectionBottomToTop:
@@ -240,8 +250,7 @@
     }
 }
 
-- (void)viewTransition:(CGPoint)translation
-{
+- (void)transformFrontView:(CGPoint)translation {
     //transition
     switch (_slideInDirection) {
         case RASlideInDirectionBottomToTop:
@@ -277,16 +286,16 @@
     }
 }
 
-- (void)transformSuperViewControllerViewWithPercentage:(CGFloat)percentage
+- (void)transformBackdropViewWithProgress:(CGFloat)progress
 {
-    CGFloat alphaDiff = (1.f - _backDropViewAlpha) * (1.f - percentage);
+    CGFloat alphaDiff = (1.f - _backDropViewAlpha) * (1.f - progress);
     _backDropView.alpha = 1.f - alphaDiff;
     CGAffineTransform transform;
     if (!_shiftBackDropView) {
-        transform = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio)*percentage), _backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio)*percentage));
+        transform = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio)*progress), _backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio)*progress));
     }else {
-        CGAffineTransform scale = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio) * percentage), _backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio) * percentage));
-        CGAffineTransform shift = [self shiftBackDropViewWithPercentage:percentage];
+        CGAffineTransform scale = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio) * progress), _backdropViewScaleReductionRatio + ((1.f - _backdropViewScaleReductionRatio) * progress));
+        CGAffineTransform shift = [self calculateBackdropShiftFromProgress:progress];
         transform = CGAffineTransformConcat(scale, shift);
     }
     _backDropView.transform = transform;
@@ -296,30 +305,28 @@
     }
 }
 
-- (CGAffineTransform)shiftBackDropViewWithPercentage:(CGFloat)percetage
-{
+- (CGAffineTransform)calculateBackdropShiftFromProgress:(CGFloat)progress {
     CGAffineTransform shift;
     switch (self.slideInDirection) {
         case RASlideInDirectionBottomToTop:
-            shift = CGAffineTransformMakeTranslation(0, (1.f - percetage) * -_shiftBackDropViewValue);
+            shift = CGAffineTransformMakeTranslation(0, (1.f - progress) * -_shiftBackDropViewValue);
             return shift;
         case RASlideInDirectionRightToLeft:
-            shift = CGAffineTransformMakeTranslation((1.f - percetage) * -_shiftBackDropViewValue, 0);
+            shift = CGAffineTransformMakeTranslation((1.f - progress) * -_shiftBackDropViewValue, 0);
             return shift;
         case RASlideInDirectionTopToBottom:
-            shift = CGAffineTransformMakeTranslation(0, (1.f - percetage) * _shiftBackDropViewValue);
+            shift = CGAffineTransformMakeTranslation(0, (1.f - progress) * _shiftBackDropViewValue);
             return shift;
         case RASlideInDirectionLeftToRight:
-            shift = CGAffineTransformMakeTranslation((1.f - percetage) * _shiftBackDropViewValue, 0);
+            shift = CGAffineTransformMakeTranslation((1.f - progress) * _shiftBackDropViewValue, 0);
             return shift;
         default:
-            shift = CGAffineTransformMakeTranslation(0, (1.f - percetage) * -_shiftBackDropViewValue);
+            shift = CGAffineTransformMakeTranslation(0, (1.f - progress) * -_shiftBackDropViewValue);
             return shift;
     }
 }
 
-- (void)reverseTransitedView
-{
+- (void)refocusFrontView {
     [UIView animateWithDuration:_animationDuration delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
         self.view.transform = CGAffineTransformIdentity;
         _backDropView.alpha = _backDropViewAlpha;
@@ -328,7 +335,7 @@
             transform = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio, _backdropViewScaleReductionRatio);
         }else {
             CGAffineTransform scale = CGAffineTransformMakeScale(_backdropViewScaleReductionRatio, _backdropViewScaleReductionRatio);
-            CGAffineTransform shift = [self shiftBackDropViewWithPercentage:0];
+            CGAffineTransform shift = [self calculateBackdropShiftFromProgress:0];
             transform = CGAffineTransformConcat(scale, shift);
         }
         _backDropView.transform = transform;
@@ -337,21 +344,22 @@
     }];
 }
 
-- (void)forwardTransitedView
-{
+- (void)dismissFrontView {
     [UIView animateWithDuration:_animationDuration delay:0.f options:UIViewAnimationOptionCurveEaseOut animations:^{
         if (self.presentingViewController) {
-            self.view.transform = [self forwardTransformByDirection];
+            self.view.transform = [self getDirectionalDismissTransform];
         }else {
             self.view.transform = CGAffineTransformIdentity;
-            self.view.window.transform = [self forwardTransformByDirection];
+            self.view.window.transform = [self getDirectionalDismissTransform];
         }
         _backDropView.alpha = 1.f;
         _backDropView.transform = CGAffineTransformIdentity;
     }completion:^(BOOL finised){
         _backDropView.userInteractionEnabled = YES;
         if (self.presentingViewController) {
-            [self dismissViewControllerAnimated:NO completion:nil];
+            [self dismissViewControllerAnimated:NO completion:^{
+                NSLog(@"dismissFrontView > Dismissed");
+            }];
         }else {
             self.view.window.backgroundColor = [UIColor colorWithWhite:0 alpha:0];
             self.view.window.hidden = YES;
@@ -359,8 +367,7 @@
     }];
 }
 
-- (CGAffineTransform)forwardTransformByDirection
-{
+- (CGAffineTransform)getDirectionalDismissTransform {
     switch (_slideInDirection) {
         case RASlideInDirectionBottomToTop:
             return CGAffineTransformMakeTranslation(0, [UIScreen mainScreen].bounds.size.height);
@@ -379,5 +386,15 @@
             break;
     }
 }
+
+- (UIColor*)randomColor {
+    CGFloat rValue = arc4random() % 256;
+    CGFloat gValue = arc4random() % 256;
+    CGFloat bValue = arc4random() % 256;
+    
+    return [UIColor colorWithRed:rValue/255.0 green:gValue/255.0 blue:bValue/255.0 alpha:1.0];
+    
+}
+
 
 @end
