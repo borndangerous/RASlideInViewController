@@ -7,17 +7,17 @@
 //
 
 #import "StackViewController.h"
+#import "UIColor+PerceivedLuminance.h"
 
-JREnumDefine(RASlideViewSlideInDirection);
+JREnumDefine(SVCardOrigin);
 
 @interface StackViewController ()
 
-@property (nonatomic, assign) BOOL appered;
+@property (nonatomic, assign, getter = isPresented) BOOL presented;
 
 @end
 
-@implementation StackViewController
-{
+@implementation StackViewController {
     UIView *_backDropView;
 }
 
@@ -51,7 +51,7 @@ JREnumDefine(RASlideViewSlideInDirection);
 - (void)viewDidAppear:(BOOL)animated {
     //back drop view
     _backDropView = [self backDropView];
-    if (!_appered)
+    if (![self isPresented])
     {
         //alpha
         self.view.alpha = 1.f;
@@ -77,7 +77,7 @@ JREnumDefine(RASlideViewSlideInDirection);
             _backDropView.alpha = _backDropViewAlpha;
             _backDropView.transform = transform;
         }completion:^(BOOL finished){
-            _appered = YES;
+            _presented = YES;
             //User intraction of superView
             _backDropView.userInteractionEnabled = NO;
         }];
@@ -87,14 +87,18 @@ JREnumDefine(RASlideViewSlideInDirection);
 - (void)initialSetup {
     NSLog(@"initialSetup");
     //initial property value
-    _slideInDirection = RASlideInDirectionBottomToTop;
+    _cardOrigin = SVCardOriginBottom;
     _shiftBackDropView = NO;
     _animationDuration = .3f;
     _backdropViewScaleReductionRatio = .9f;
     _shiftBackDropViewValue = 100.f;
     _backDropViewAlpha = 0;
     
-    self.view.backgroundColor = [self randomColor];
+    _shadowEnabled = YES;
+    _cardStyle = NO;
+    _showsHandle = YES;
+    
+    //self.view.backgroundColor = [self randomColor];
 }
 
 - (void)configure {
@@ -109,17 +113,64 @@ JREnumDefine(RASlideViewSlideInDirection);
     self.definesPresentationContext = YES;
     self.modalPresentationStyle = UIModalPresentationOverCurrentContext;
     
-    //shadow
-    self.view.layer.shadowColor = [UIColor blackColor].CGColor;
-    self.view.layer.shadowOffset = [self shadowOffsetByDirection];
-    self.view.layer.shadowOpacity = .5f;
-    self.view.layer.shadowRadius = 2.f;
-    self.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.view.bounds].CGPath;
-    self.view.layer.shouldRasterize = YES;
-    //self.view.layer.cornerRadius = 6;
-    //self.view.layer.masksToBounds = YES;
-    self.view.layer.rasterizationScale = [UIScreen mainScreen].scale;
+    [self configureAppearance];
+    [self configureGestures];
+
+}
+
+-(void)configureAppearance {
     
+    if (_shadowEnabled) {
+        
+        //shadow
+        self.view.layer.shadowColor = [UIColor blackColor].CGColor;
+        self.view.layer.shadowOffset = [self shadowOffsetByDirection];
+        self.view.layer.shadowOpacity = .5f;
+        self.view.layer.shadowRadius = 2.f;
+        self.view.layer.shadowPath = [UIBezierPath bezierPathWithRect:self.view.bounds].CGPath;
+        self.view.layer.shouldRasterize = YES;
+        //self.view.layer.cornerRadius = 6;
+        //self.view.layer.masksToBounds = YES;
+        self.view.layer.rasterizationScale = [UIScreen mainScreen].scale;
+        
+    }
+    
+    if(!_showsHandle)
+        return;
+
+    [self.view addSubview:self.handleView];
+    
+}
+
+-(UIView*)handleView {
+    if(!_handleView){
+        _handleView = [[UIView alloc] initWithFrame:[self handleFrame]];
+        //[_handleView setBackgroundColor:[[self handleColor] colorWithAlphaComponent:0.5]];
+        _handleView.alpha = 0.5;
+        _handleView.layer.cornerRadius = 4;
+        _handleView.layer.masksToBounds = YES;
+    }
+    return _handleView;
+}
+
+-(CGRect)handleFrame {
+    return CGRectMake(10,10,30,8);
+}
+
+-(UIColor*)handleColor {
+    double luminance = self.view.backgroundColor.perceivedLuminance;
+    NSLog(@"luminance on color: %@ -> %f", self.view.backgroundColor, luminance);
+    return luminance > 0.5 ? [UIColor blackColor] : [UIColor whiteColor];
+}
+
+-(void)setBackgroundColor:(UIColor*)color {
+    self.view.backgroundColor = color;
+    if([self showsHandle]){
+        [self.handleView setBackgroundColor:[self handleColor]];
+    }
+}
+
+-(void)configureGestures {
     //pan Gesture
     UIPanGestureRecognizer *pan = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panTransitionView:)];
     [self.view addGestureRecognizer:pan];
@@ -127,14 +178,14 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (CGRect)appearedAnimationStandbyPosition {
     CGSize viewSize = self.view.bounds.size;
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             return CGRectMake(0, viewSize.height, viewSize.width, viewSize.height);
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             return CGRectMake(viewSize.width, 0, viewSize.width, viewSize.height);
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             return CGRectMake(0, -viewSize.height, viewSize.width, viewSize.height);
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             return CGRectMake(-viewSize.width, 0, viewSize.width, viewSize.height);
         default:
             return CGRectMake(0, viewSize.height, viewSize.width, viewSize.height);
@@ -143,14 +194,14 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (CGSize)shadowOffsetByDirection
 {
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             return CGSizeMake(0, -4.f);
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             return CGSizeMake(-4.f, 0);
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             return CGSizeMake(0, 4.f);
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             return CGSizeMake(4.f, 0);
         default:
             return CGSizeMake(0, -4.f);
@@ -200,23 +251,23 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (BOOL)didEndDragingHandllerWithVelocity:(CGPoint)velocity
 {
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             if (velocity.y >= 500.f) {
                 return YES;
             }
             return NO;
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             if (velocity.x >= 500.f) {
                 return YES;
             }
             return NO;
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             if (velocity.y <= -500.f) {
                 return YES;
             }
             return NO;
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             if (velocity.x <= -500.f) {
                 return YES;
             }
@@ -231,17 +282,17 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (CGFloat)calcprogress
 {
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             return self.view.frame.origin.y / [UIScreen mainScreen].bounds.size.height;
             break;
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             return self.view.frame.origin.x / [UIScreen mainScreen].bounds.size.width;
             break;
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             return (-self.view.frame.origin.y) / [UIScreen mainScreen].bounds.size.height;
             break;
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             return (-self.view.frame.origin.x) / [UIScreen mainScreen].bounds.size.width;
             break;
         default:
@@ -252,26 +303,26 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (void)transformFrontView:(CGPoint)translation {
     //transition
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             self.view.transform = CGAffineTransformMakeTranslation(0, translation.y);
             if (self.view.frame.origin.y <= 0) {
                 self.view.transform = CGAffineTransformIdentity;
             }
             break;
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             self.view.transform = CGAffineTransformMakeTranslation(translation.x, 0);
             if (self.view.frame.origin.x <= 0) {
                 self.view.transform = CGAffineTransformIdentity;
             }
             break;
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             self.view.transform = CGAffineTransformMakeTranslation(0, translation.y);
             if (self.view.frame.origin.y >= 0) {
                 self.view.transform = CGAffineTransformIdentity;
             }
             break;
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             self.view.transform = CGAffineTransformMakeTranslation(translation.x, 0);
             if (self.view.frame.origin.x >= 0) {
                 self.view.transform = CGAffineTransformIdentity;
@@ -307,17 +358,17 @@ JREnumDefine(RASlideViewSlideInDirection);
 
 - (CGAffineTransform)calculateBackdropShiftFromProgress:(CGFloat)progress {
     CGAffineTransform shift;
-    switch (self.slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (self.cardOrigin) {
+        case SVCardOriginBottom:
             shift = CGAffineTransformMakeTranslation(0, (1.f - progress) * -_shiftBackDropViewValue);
             return shift;
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             shift = CGAffineTransformMakeTranslation((1.f - progress) * -_shiftBackDropViewValue, 0);
             return shift;
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             shift = CGAffineTransformMakeTranslation(0, (1.f - progress) * _shiftBackDropViewValue);
             return shift;
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             shift = CGAffineTransformMakeTranslation((1.f - progress) * _shiftBackDropViewValue, 0);
             return shift;
         default:
@@ -368,17 +419,17 @@ JREnumDefine(RASlideViewSlideInDirection);
 }
 
 - (CGAffineTransform)getDirectionalDismissTransform {
-    switch (_slideInDirection) {
-        case RASlideInDirectionBottomToTop:
+    switch (_cardOrigin) {
+        case SVCardOriginBottom:
             return CGAffineTransformMakeTranslation(0, [UIScreen mainScreen].bounds.size.height);
             break;
-        case RASlideInDirectionRightToLeft:
+        case SVCardOriginRight:
             return CGAffineTransformMakeTranslation([UIScreen mainScreen].bounds.size.width, 0);
             break;
-        case RASlideInDirectionTopToBottom:
+        case SVCardOriginTop:
             return CGAffineTransformMakeTranslation(0, -[UIScreen mainScreen].bounds.size.height);
             break;
-        case RASlideInDirectionLeftToRight:
+        case SVCardOriginLeft:
             return CGAffineTransformMakeTranslation(-[UIScreen mainScreen].bounds.size.width, 0);
             break;
         default:
