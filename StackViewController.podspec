@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name         = "StackViewController"
-  s.version      = "1.1"
+  s.version      = "1.2"
   s.summary      = "StackViewController has an transition effect expressing the depth, and you can dismiss it by draging"
   s.license      = { :type => 'MIT', :file => 'LICENSE.txt' }
   s.homepage     = "https://github.com/borndangerous/StackViewController"
