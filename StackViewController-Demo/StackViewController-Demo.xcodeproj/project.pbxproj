@@ -17,6 +17,7 @@
 		E5B61E341A19B22D001E5036 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = E5B61E2F1A19B22D001E5036 /* InfoPlist.strings */; };
 		E5B61E361A19B244001E5036 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = E5B61E351A19B244001E5036 /* Images.xcassets */; };
 		E5B61E3B1A19B301001E5036 /* RAAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B61E3A1A19B301001E5036 /* RAAppDelegate.m */; };
+		E5B61E411A19BC7D001E5036 /* UIColor+PerceivedLuminance.m in Sources */ = {isa = PBXBuildFile; fileRef = E5B61E401A19BC7D001E5036 /* UIColor+PerceivedLuminance.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,10 +25,10 @@
 		2A1C57EF1911859B007013D2 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		2A1C57F11911859B007013D2 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		2A1C57F31911859B007013D2 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
-		E5B61E241A19B191001E5036 /* StackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = StackViewController.h; path = "StackViewController-Demo/StackViewController/StackViewController.h"; sourceTree = SOURCE_ROOT; };
-		E5B61E251A19B191001E5036 /* StackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = StackViewController.m; path = "StackViewController-Demo/StackViewController/StackViewController.m"; sourceTree = SOURCE_ROOT; };
-		E5B61E271A19B1E7001E5036 /* CanvasViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CanvasViewController.m; path = "StackViewController-Demo/CanvasViewController.m"; sourceTree = SOURCE_ROOT; };
-		E5B61E281A19B1E7001E5036 /* NewStackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NewStackViewController.m; path = "StackViewController-Demo/NewStackViewController.m"; sourceTree = SOURCE_ROOT; };
+		E5B61E241A19B191001E5036 /* StackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; lineEnding = 0; name = StackViewController.h; path = "StackViewController-Demo/StackViewController/StackViewController.h"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objcpp; };
+		E5B61E251A19B191001E5036 /* StackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = StackViewController.m; path = "StackViewController-Demo/StackViewController/StackViewController.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		E5B61E271A19B1E7001E5036 /* CanvasViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = CanvasViewController.m; path = "StackViewController-Demo/CanvasViewController.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
+		E5B61E281A19B1E7001E5036 /* NewStackViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; lineEnding = 0; name = NewStackViewController.m; path = "StackViewController-Demo/NewStackViewController.m"; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.objc; };
 		E5B61E291A19B1E7001E5036 /* NewStackViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NewStackViewController.h; path = "StackViewController-Demo/NewStackViewController.h"; sourceTree = SOURCE_ROOT; };
 		E5B61E2A1A19B1E7001E5036 /* CanvasViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CanvasViewController.h; path = "StackViewController-Demo/CanvasViewController.h"; sourceTree = SOURCE_ROOT; };
 		E5B61E2D1A19B22D001E5036 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = "StackViewController-Demo/main.m"; sourceTree = SOURCE_ROOT; };
@@ -35,9 +36,11 @@
 		E5B61E301A19B22D001E5036 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = "StackViewController-Demo/en.lproj/InfoPlist.strings"; sourceTree = SOURCE_ROOT; };
 		E5B61E311A19B22D001E5036 /* StackViewController-Demo-Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "StackViewController-Demo-Prefix.pch"; path = "StackViewController-Demo/StackViewController-Demo-Prefix.pch"; sourceTree = SOURCE_ROOT; };
 		E5B61E351A19B244001E5036 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = "StackViewController-Demo/Images.xcassets"; sourceTree = SOURCE_ROOT; };
-		E5B61E381A19B293001E5036 /* JREnum.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = JREnum.h; path = "StackViewController-Demo/StackViewController/JREnum.h"; sourceTree = "<group>"; };
 		E5B61E391A19B301001E5036 /* RAAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAAppDelegate.h; path = "StackViewController-Demo/RAAppDelegate.h"; sourceTree = SOURCE_ROOT; };
 		E5B61E3A1A19B301001E5036 /* RAAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAAppDelegate.m; path = "StackViewController-Demo/RAAppDelegate.m"; sourceTree = SOURCE_ROOT; };
+		E5B61E3E1A19BC7D001E5036 /* JREnum.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JREnum.h; sourceTree = "<group>"; };
+		E5B61E3F1A19BC7D001E5036 /* UIColor+PerceivedLuminance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+PerceivedLuminance.h"; sourceTree = "<group>"; };
+		E5B61E401A19BC7D001E5036 /* UIColor+PerceivedLuminance.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+PerceivedLuminance.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,13 +115,24 @@
 		2A1C5824191185AF007013D2 /* StackViewController */ = {
 			isa = PBXGroup;
 			children = (
-				E5B61E381A19B293001E5036 /* JREnum.h */,
+				E5B61E3D1A19BC7D001E5036 /* Helpers */,
 				E5B61E241A19B191001E5036 /* StackViewController.h */,
 				E5B61E251A19B191001E5036 /* StackViewController.m */,
 			);
 			name = StackViewController;
 			path = "RASlideInViewController-Demo/RASlideInViewController";
 			sourceTree = "<group>";
+		};
+		E5B61E3D1A19BC7D001E5036 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				E5B61E3E1A19BC7D001E5036 /* JREnum.h */,
+				E5B61E3F1A19BC7D001E5036 /* UIColor+PerceivedLuminance.h */,
+				E5B61E401A19BC7D001E5036 /* UIColor+PerceivedLuminance.m */,
+			);
+			name = Helpers;
+			path = "StackViewController-Demo/StackViewController/Helpers";
+			sourceTree = SOURCE_ROOT;
 		};
 /* End PBXGroup section */
 
@@ -185,6 +199,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E5B61E411A19BC7D001E5036 /* UIColor+PerceivedLuminance.m in Sources */,
 				E5B61E261A19B191001E5036 /* StackViewController.m in Sources */,
 				E5B61E2C1A19B1E7001E5036 /* NewStackViewController.m in Sources */,
 				E5B61E321A19B22D001E5036 /* main.m in Sources */,

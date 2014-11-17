@@ -38,7 +38,7 @@
     UIStoryboard *storyboard = self.storyboard;
     NewStackViewController *slideInViewController = [storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([NewStackViewController class])];
     
-    slideInViewController.slideInDirection = RASlideInDirectionRightToLeft;
+    slideInViewController.cardOrigin = SVCardOriginRight;
     slideInViewController.shiftBackDropView = YES;
     slideInViewController.backDropViewAlpha = .4f;
     

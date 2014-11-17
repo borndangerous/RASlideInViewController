@@ -13,7 +13,6 @@
 @interface CanvasViewController ()
 
 @property (nonatomic, strong) UIWindow *subWindow;
-
 @end
 
 @implementation CanvasViewController
@@ -28,13 +27,13 @@
     StackViewController *frontViewController = [StackViewController new];
     frontViewController.shiftBackDropView = NO;
     frontViewController.backdropViewScaleReductionRatio = 1;
-    [frontViewController.view setBackgroundColor:[UIColor yellowColor]];
+    [frontViewController setBackgroundColor:[UIColor colorWithWhite:0.779 alpha:1.000]];
     [self presentViewController:frontViewController animated:NO completion:^{
         
         StackViewController *nextViewController = [StackViewController new];
-        [nextViewController setSlideInDirection:RASlideInDirectionBottomToTop];
+        [nextViewController setCardOrigin:SVCardOriginBottom];
         nextViewController.backdropViewScaleReductionRatio = 0.97;
-        [nextViewController.view setBackgroundColor:[UIColor cyanColor]];
+        [nextViewController setBackgroundColor:[UIColor blackColor]];
         [self.presentedViewController presentViewController:nextViewController animated:NO completion:nil];
         
     }];
@@ -56,7 +55,7 @@
     //UIStoryboard *storyboard = self.storyboard;
     StackViewController *slideViewController = [StackViewController new];
     
-    //slideViewController.slideInDirection = RASlideInDirectionLeftToRight;
+    //slideViewController.cardOrigin = SVCardOriginLeft;
     
     _subWindow = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     _subWindow.windowLevel = UIWindowLevelStatusBar;
