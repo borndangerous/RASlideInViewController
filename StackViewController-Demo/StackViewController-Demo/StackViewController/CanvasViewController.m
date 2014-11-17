@@ -7,8 +7,8 @@
 //
 
 #import "CanvasViewController.h"
-#import "RASlideInViewController.h"
-#import "RANewSlideInViewController.h"
+#import "StackViewController.h"
+#import "NewStackViewController.h"
 
 @interface CanvasViewController ()
 
@@ -25,13 +25,13 @@
 
 -(void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
-    RASlideInViewController *frontViewController = [RASlideInViewController new];
+    StackViewController *frontViewController = [StackViewController new];
     frontViewController.shiftBackDropView = NO;
     frontViewController.backdropViewScaleReductionRatio = 1;
     [frontViewController.view setBackgroundColor:[UIColor yellowColor]];
     [self presentViewController:frontViewController animated:NO completion:^{
         
-        RASlideInViewController *nextViewController = [RASlideInViewController new];
+        StackViewController *nextViewController = [StackViewController new];
         [nextViewController setSlideInDirection:RASlideInDirectionBottomToTop];
         nextViewController.backdropViewScaleReductionRatio = 0.97;
         [nextViewController.view setBackgroundColor:[UIColor cyanColor]];
@@ -44,7 +44,7 @@
 {
 //    UIStoryboard *storyboard = self.storyboard;
 //    RANewSlideInViewController *slideViewController = [storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([RANewSlideInViewController class])];
-    RANewSlideInViewController *slideViewController = [[RANewSlideInViewController alloc] init];
+    NewStackViewController *slideViewController = [[NewStackViewController alloc] init];
     
     self.modalPresentationStyle = UIModalPresentationCurrentContext;  //***
     
@@ -54,7 +54,7 @@
 - (IBAction)addNewWindow:(UIButton *)sender
 {
     //UIStoryboard *storyboard = self.storyboard;
-    RASlideInViewController *slideViewController = [RASlideInViewController new];
+    StackViewController *slideViewController = [StackViewController new];
     
     //slideViewController.slideInDirection = RASlideInDirectionLeftToRight;
     

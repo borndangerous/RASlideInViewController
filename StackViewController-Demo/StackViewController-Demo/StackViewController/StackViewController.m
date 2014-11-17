@@ -6,17 +6,17 @@
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
 //
 
-#import "RASlideInViewController.h"
+#import "StackViewController.h"
 
 JREnumDefine(RASlideViewSlideInDirection);
 
-@interface RASlideInViewController ()
+@interface StackViewController ()
 
 @property (nonatomic, assign) BOOL appered;
 
 @end
 
-@implementation RASlideInViewController
+@implementation StackViewController
 {
     UIView *_backDropView;
 }

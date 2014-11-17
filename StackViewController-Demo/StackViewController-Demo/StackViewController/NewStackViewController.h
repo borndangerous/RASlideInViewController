@@ -6,9 +6,9 @@
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
 //
 
-#import "RASlideInViewController.h"
+#import "StackViewController.h"
 
-@interface RANewSlideInViewController : RASlideInViewController
+@interface NewStackViewController : StackViewController
 
 @property (weak, nonatomic) IBOutlet UIButton *addNewViewButton;
 

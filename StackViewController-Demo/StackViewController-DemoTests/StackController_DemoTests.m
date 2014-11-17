@@ -1,6 +1,6 @@
 //
-//  RASlideInViewController_DemoTests.m
-//  RASlideInViewController-DemoTests
+//  StackController_DemoTests.m
+//  StackViewController-DemoTests
 //
 //  Created by Ryo Aoyama on 5/1/14.
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
@@ -8,11 +8,11 @@
 
 #import <XCTest/XCTest.h>
 
-@interface RASlideInViewController_DemoTests : XCTestCase
+@interface StackViewController_DemoTests : XCTestCase
 
 @end
 
-@implementation RASlideInViewController_DemoTests
+@implementation StackViewController_DemoTests
 
 - (void)setUp
 {

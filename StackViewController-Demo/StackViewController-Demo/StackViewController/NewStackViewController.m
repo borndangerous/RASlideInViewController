@@ -6,14 +6,14 @@
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
 //
 
-#import "RANewSlideInViewController.h"
+#import "NewStackViewController.h"
 
-@interface RANewSlideInViewController ()
+@interface NewStackViewController ()
 
 
 @end
 
-@implementation RANewSlideInViewController
+@implementation NewStackViewController
 
 - (void)viewDidLoad
 {
@@ -36,7 +36,7 @@
 - (IBAction)addNewView:(UIButton *)sender
 {
     UIStoryboard *storyboard = self.storyboard;
-    RANewSlideInViewController *slideInViewController = [storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([RANewSlideInViewController class])];
+    NewStackViewController *slideInViewController = [storyboard instantiateViewControllerWithIdentifier:NSStringFromClass([NewStackViewController class])];
     
     slideInViewController.slideInDirection = RASlideInDirectionRightToLeft;
     slideInViewController.shiftBackDropView = YES;

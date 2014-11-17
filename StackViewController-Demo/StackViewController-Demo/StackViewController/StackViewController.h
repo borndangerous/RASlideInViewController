@@ -15,7 +15,7 @@ JREnumDeclare(RASlideViewSlideInDirection,
               RASlideInDirectionTopToBottom,
               RASlideInDirectionLeftToRight);
 
-@interface RASlideInViewController : UIViewController
+@interface StackViewController : UIViewController
 
 @property (nonatomic, assign) RASlideViewSlideInDirection slideInDirection; //default RASlideInDirectionBottomToTop;
 

@@ -1,13 +1,13 @@
 //
 //  RAAppDelegate.m
-//  RASlideInViewController-Demo
+//  StackViewController-Demo
 //
 //  Created by Ryo Aoyama on 5/1/14.
 //  Copyright (c) 2014 Ryo Aoyama. All rights reserved.
 //
 
 #import "RAAppDelegate.h"
-//#import "RASlideInViewController.h"
+//#import "StackViewController.h"
 #import "CanvasViewController.h"
 
 @implementation RAAppDelegate
