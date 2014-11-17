@@ -6,7 +6,7 @@ Pod::Spec.new do |s|
   s.homepage     = "https://github.com/borndangerous/StackViewController"
   s.author       = { "ra1028" => "r.fe51028.r@gmail.com" }
   s.platform     = :ios, '7.0'
-  s.source       = { :git => "https://github.com/ra1028/StackViewController.git", :tag => "1.0" }
+  s.source       = { :git => "https://github.com/borndangerous/StackViewController.git", :tag => "1.0" }
   s.requires_arc = true
   s.source_files = 'StackViewController/*.{h,m}'
 end
